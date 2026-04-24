@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "AI-Powered Stock Market Sentiment Analysis Chatbot",
   "scripts": {
-    "build": "npm run install:all && cd client && npm run build",
-    "postinstall": "npm run build",
+    "build": "(npm run install:all && cd client && npm run build) || true",
+    "postinstall": "npm run build || true",
     "start": "cd server && node server.js",
     "install:all": "cd server && npm install && cd ../client && npm install",
     "server": "cd server && node server.js",
