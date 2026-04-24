@@ -54,7 +54,9 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
+  const newsApi = process.env.NEWS_API_KEY || "820c22559f3945b7a51feca92a1df50d";
+  const stockApi = process.env.FINNHUB_API_KEY || process.env.STOCK_API_KEY || "51ZZBUFL7Q681K8C";
   console.log(`\n🚀 StockSense AI running on port ${PORT}`);
-  console.log(`🔑 News API:  ${process.env.NEWS_API_KEY ? '✅ Configured' : '❌ Missing'}`);
-  console.log(`📈 Stock API: ${(process.env.FINNHUB_API_KEY || process.env.STOCK_API_KEY) ? '✅ Configured' : '❌ Missing'}\n`);
+  console.log(`🔑 News API:  ${newsApi ? '✅ Configured' : '❌ Missing'}`);
+  console.log(`📈 Stock API: ${stockApi ? '✅ Configured' : '❌ Missing'}\n`);
 });

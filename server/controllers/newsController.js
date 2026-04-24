@@ -234,8 +234,8 @@ async function analyzeStock(req, res) {
     const resolvedName   = resolved.name;    // e.g. "Infosys"
     console.log(`✅ Resolved: "${sanitizedQuery}" → ${resolvedSymbol} (${resolvedName})`);
 
-    const newsApiKey  = process.env.NEWS_API_KEY;
-    const stockApiKey = process.env.FINNHUB_API_KEY || process.env.STOCK_API_KEY;
+    const newsApiKey  = process.env.NEWS_API_KEY || "820c22559f3945b7a51feca92a1df50d";
+    const stockApiKey = process.env.FINNHUB_API_KEY || process.env.STOCK_API_KEY || "51ZZBUFL7Q681K8C";
 
     const hasNewsKey  = newsApiKey  && newsApiKey  !== 'your_key_here' && newsApiKey.length  > 5;
     const hasStockKey = stockApiKey && stockApiKey !== 'your_key_here' && stockApiKey.length > 5;
