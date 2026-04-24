@@ -40,7 +40,7 @@ app.get('/api/status', (req, res) => {
 
 // Serve React build in production
 if (isProd) {
-  const dist = path.join(__dirname, '../client/dist');
+  const dist = path.join(__dirname, 'public');
   app.use(express.static(dist, { maxAge: '1d' }));
   app.get('*', (req, res) => {
     const fs = require('fs');
