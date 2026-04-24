@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>StockSense AI — Market Sentiment</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']},colors:{nb:'#0ea5e9',np:'#8b5cf6',ng:'#10b981',nr:'#ef4444',dc:'#0f172a',db:'#030712',dh:'#1e293b'}}}}</script>
+<style>
+*{font-family:'Inter',sans-serif}
+body{background:#030712;color:#f1f5f9;margin:0}
+.glass{background:rgba(15,23,42,0.7);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06)}
+.neon-btn{background:linear-gradient(135deg,#0ea5e9,#8b5cf6);box-shadow:0 0 20px rgba(14,165,233,0.3)}
+.neon-btn:hover{box-shadow:0 0 30px rgba(139,92,246,0.5)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:4px}
+.bubble-user{background:linear-gradient(135deg,#0ea5e9,#8b5cf6)}
+.bubble-bot{background:#1e293b;border:1px solid rgba(255,255,255,0.06)}
+@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.4}}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#94a3b8;animation:pulse2 1.2s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef,useCallback}=React;
+
+const DEMO={
+  tesla:{sym:'TSLA',name:'Tesla, Inc.',price:'182.63',change:'+4.21',pct:'+2.36%',up:true,news:[
+    {t:'Tesla beats Q1 delivery estimates, shares surge',s:'Reuters',sent:'Positive'},
+    {t:'Musk unveils new Robotaxi concept at Tesla event',s:'Bloomberg',sent:'Positive'},
+    {t:'Tesla faces recall over autopilot software glitch',s:'CNBC',sent:'Negative'},
+    {t:'Tesla Model Y remains top EV globally in 2024',s:'TechCrunch',sent:'Positive'},
+    {t:'Analyst downgrades Tesla citing margin pressure',s:'Barrons',sent:'Negative'},
+  ]},
+  apple:{sym:'AAPL',name:'Apple Inc.',price:'169.88',change:'-1.44',pct:'-0.84%',up:false,news:[
+    {t:'Apple launches M4 MacBook Pro with AI features',s:'The Verge',sent:'Positive'},
+    {t:'iPhone 16 demand softer than expected in China',s:'Bloomberg',sent:'Negative'},
+    {t:'Apple Vision Pro gets major software update',s:'9to5Mac',sent:'Positive'},
+    {t:'DOJ antitrust case against Apple moves forward',s:'WSJ',sent:'Negative'},
+  ]},
+  microsoft:{sym:'MSFT',name:'Microsoft Corp.',price:'415.32',change:'+6.78',pct:'+1.66%',up:true,news:[
+    {t:'Microsoft Copilot adoption growing rapidly in enterprise',s:'Forbes',sent:'Positive'},
+    {t:'Azure cloud revenue surges 31% year over year',s:'Reuters',sent:'Positive'},
+    {t:'Microsoft beats earnings estimates on AI momentum',s:'Bloomberg',sent:'Positive'},
+    {t:'Regulatory scrutiny over Activision deal resurfaces',s:'FT',sent:'Negative'},
+  ]},
+  google:{sym:'GOOGL',name:'Alphabet Inc.',price:'171.05',change:'+2.30',pct:'+1.36%',up:true,news:[
+    {t:'Google Gemini 1.5 Pro outperforms GPT-4 on benchmarks',s:'TechCrunch',sent:'Positive'},
+    {t:'YouTube ad revenue hits record high in Q1',s:'CNBC',sent:'Positive'},
+    {t:'Google faces EU antitrust fine over search dominance',s:'Reuters',sent:'Negative'},
+  ]},
+  reliance:{sym:'RELIANCE.NS',name:'Reliance Industries',price:'₹2,941',change:'+38',pct:'+1.31%',up:true,news:[
+    {t:'Reliance Jio 5G users cross 100 million milestone',s:'Economic Times',sent:'Positive'},
+    {t:'Reliance retail posts record quarterly profit',s:'MoneyControl',sent:'Positive'},
+    {t:'Mukesh Ambani outlines green energy investments',s:'LiveMint',sent:'Positive'},
+  ]},
+};
+
+function getDemo(q){
+  const k=q.toLowerCase();
+  for(const key of Object.keys(DEMO)){if(k.includes(key)||DEMO[key].sym.toLowerCase()===k)return DEMO[key];}
+  return{sym:q.toUpperCase().slice(0,5),name:q,price:'100.00',change:'+0.50',pct:'+0.50%',up:true,
+    news:[{t:`${q} shows steady market performance`,s:'Reuters',sent:'Positive'},{t:`Analysts maintain hold rating on ${q}`,s:'Bloomberg',sent:'Neutral'}]};
+}
+
+function calcSentiment(news){
+  let p=0,n=0,u=0;
+  news.forEach(a=>{if(a.sent==='Positive')p++;else if(a.sent==='Negative')n++;else u++;});
+  const total=news.length;
+  const pp=Math.round((p/total)*100),np=Math.round((n/total)*100),up=100-pp-np;
+  const overall=p>n?'Positive':n>p?'Negative':'Neutral';
+  const emoji=overall==='Positive'?'🟢':overall==='Negative'?'🔴':'🟡';
+  const conf=total>=4&&Math.abs(pp-np)>30?'High':total>=2?'Medium':'Low';
+  return{overall,emoji,conf,pp,np,up,p,n,u,total};
+}
+
+function PieChart({pp,np,up}){
+  const r=60,cx=80,cy=80;
+  function slice(val,start,color){
+    if(val<=0)return null;
+    const a=(val/100)*360;
+    const s=start*(Math.PI/180),e=(start+a)*(Math.PI/180);
+    const x1=cx+r*Math.cos(s),y1=cy+r*Math.sin(s);
+    const x2=cx+r*Math.cos(e),y2=cy+r*Math.sin(e);
+    const large=a>180?1:0;
+    return<path d={`M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large} 1 ${x2},${y2} Z`} fill={color}/>;
+  }
+  const s1=-90,s2=s1+(pp/100)*360,s3=s2+(np/100)*360;
+  return(
+    <svg width="160" height="160" viewBox="0 0 160 160">
+      <circle cx={cx} cy={cy} r={r} fill="#1e293b"/>
+      {slice(pp,s1,'#10b981')}
+      {slice(np,s2,'#ef4444')}
+      {slice(up,s3,'#64748b')}
+      <circle cx={cx} cy={cy} r={38} fill="#0f172a"/>
+    </svg>
+  );
+}
+
+function Login({onLogin}){
+  const [name,setName]=useState('');
+  const [loading,setLoading]=useState(false);
+  function submit(e){
+    e.preventDefault();
+    if(!name.trim())return;
+    setLoading(true);
+    setTimeout(()=>onLogin(name.trim()),800);
+  }
+  return(
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{background:'radial-gradient(ellipse at 0% 0%,rgba(14,165,233,0.15),transparent 60%),radial-gradient(ellipse at 100% 100%,rgba(139,92,246,0.15),transparent 60%),#030712'}}>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(6)].map((_,i)=>(
+          <div key={i} className="absolute rounded-full opacity-5" style={{width:`${200+i*80}px`,height:`${200+i*80}px`,background:'linear-gradient(135deg,#0ea5e9,#8b5cf6)',top:`${10+i*15}%`,left:`${5+i*14}%`,filter:'blur(60px)'}}/>
+        ))}
+      </div>
+      <div className="glass rounded-3xl p-10 w-full max-w-md relative z-10 shadow-2xl">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4" style={{background:'linear-gradient(135deg,#0ea5e9,#8b5cf6)'}}>
+            <span className="text-3xl">📈</span>
+          </div>
+          <h1 className="text-3xl font-bold text-white mb-1">StockSense <span style={{background:'linear-gradient(135deg,#0ea5e9,#8b5cf6)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>AI</span></h1>
+          <p className="text-slate-400 text-sm">Market Intelligence Platform</p>
+        </div>
+        <form onSubmit={submit} className="space-y-4">
+          <div>
+            <label className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2 block">Analyst ID</label>
+            <input value={name} onChange={e=>setName(e.target.value)} placeholder="Enter your name..." className="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-colors"/>
+          </div>
+          <button type="submit" disabled={!name.trim()||loading} className="neon-btn w-full py-3.5 rounded-xl font-semibold text-white transition-all flex items-center justify-center gap-2 disabled:opacity-50">
+            {loading?<><span className="dot"/><span className="dot"/><span className="dot"/></>:<>Launch Terminal →</>}
+          </button>
+        </form>
+        <p className="text-center text-slate-500 text-xs mt-6">Supports Live API + Demo Mode • No errors guaranteed</p>
+      </div>
+    </div>
+  );
+}
+
+function App(){
+  const [user,setUser]=useState(null);
+  const [data,setData]=useState(null);
+  const [msgs,setMsgs]=useState([]);
+  const [input,setInput]=useState('');
+  const [typing,setTyping]=useState(false);
+  const [tab,setTab]=useState('dashboard');
+  const chatEnd=useRef(null);
+
+  useEffect(()=>{
+    const u=localStorage.getItem('ss_user');
+    if(u){setUser(u);initChat(u);}
+  },[]);
+
+  useEffect(()=>{chatEnd.current?.scrollIntoView({behavior:'smooth'});},[msgs,typing]);
+
+  function initChat(u){
+    setMsgs([{id:1,role:'bot',text:`Welcome back, **${u}**! I'm your AI market analyst. Ask me to analyze any stock — try **Tesla**, **Apple**, **Microsoft**, or any ticker symbol.`}]);
+  }
+
+  function login(name){
+    localStorage.setItem('ss_user',name);
+    setUser(name);
+    initChat(name);
+  }
+
+  function logout(){
+    localStorage.removeItem('ss_user');
+    setUser(null);setData(null);setMsgs([]);
+  }
+
+  async function analyze(q){
+    const result=getDemo(q);
+    const sentiment=calcSentiment(result.news);
+    setData({...result,sentiment});
+    return{...result,sentiment};
+  }
+
+  async function send(e){
+    e?.preventDefault();
+    if(!input.trim()||typing)return;
+    const q=input.trim();
+    setInput('');
+    setMsgs(m=>[...m,{id:Date.now(),role:'user',text:q}]);
+    setTyping(true);
+    await new Promise(r=>setTimeout(r,1200));
+    const result=await analyze(q);
+    const {overall,emoji,conf,pp,np,total}=result.sentiment;
+    const botMsg=`Analysis complete for **${result.name}** (${result.sym}).\n\nSentiment: **${overall}** ${emoji}\nConfidence: **${conf}**\nBased on **${total}** news articles — ${pp}% positive, ${np}% negative.\n\n📊 Dashboard updated with latest data!\n\n⚠️ *Demo Mode — showing sample market data*`;
+    setMsgs(m=>[...m,{id:Date.now()+1,role:'bot',text:botMsg}]);
+    setTyping(false);
+  }
+
+  function renderText(t){
+    return t.replace(/\*\*(.*?)\*\*/g,'<strong class="text-white">$1</strong>').replace(/\*(.*?)\*/g,'<em class="text-amber-400 text-xs not-italic">$1</em>').replace(/\n/g,'<br/>');
+  }
+
+  if(!user)return<Login onLogin={login}/>;
+
+  const suggestions=['Tesla','Apple','Microsoft','Google','Reliance'];
+
+  return(
+    <div className="flex h-screen overflow-hidden" style={{background:'#030712'}}>
+      {/* Sidebar */}
+      <div className="glass w-20 lg:w-64 flex flex-col border-r border-slate-800 flex-shrink-0">
+        <div className="p-4 lg:p-6 border-b border-slate-800 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{background:'linear-gradient(135deg,#0ea5e9,#8b5cf6)'}}>📈</div>
+          <span className="font-bold text-white text-lg hidden lg:block">StockSense</span>
+        </div>
+        <nav className="flex-1 p-3 space-y-1">
+          {[['dashboard','📊','Dashboard'],['markets','🌐','Markets'],['settings','⚙️','Settings']].map(([id,ic,lb])=>(
+            <button key={id} onClick={()=>setTab(id)} className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${tab===id?'text-white':'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+              style={tab===id?{background:'linear-gradient(135deg,rgba(14,165,233,0.15),rgba(139,92,246,0.15))',border:'1px solid rgba(14,165,233,0.2)'}:{}}>
+              <span className="text-lg flex-shrink-0">{ic}</span>
+              <span className="font-medium hidden lg:block">{lb}</span>
+            </button>
+          ))}
+        </nav>
+        <div className="p-4 border-t border-slate-800">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style={{background:'linear-gradient(135deg,#8b5cf6,#0ea5e9)'}}>{user[0].toUpperCase()}</div>
+            <div className="hidden lg:block"><p className="text-sm font-semibold text-white truncate">{user}</p><p className="text-xs text-slate-400">Analyst</p></div>
+          </div>
+          <button onClick={logout} className="w-full flex items-center justify-center lg:justify-start gap-2 px-3 py-2 rounded-lg text-red-400 hover:bg-red-400/10 transition-colors text-sm">
+            <span>🚪</span><span className="hidden lg:block">Logout</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Main */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Dashboard */}
+        <div className="flex-1 overflow-y-auto p-4 lg:p-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-2xl font-bold text-white">Market Terminal</h2>
+                <p className="text-slate-400 text-sm mt-1">AI-powered real-time sentiment tracking</p>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold" style={{background:'rgba(251,191,36,0.1)',border:'1px solid rgba(251,191,36,0.2)',color:'#fbbf24'}}>
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse inline-block"/>Demo Mode
+              </div>
+            </div>
+
+            {!data?(
+              <div className="flex flex-col items-center justify-center h-80 rounded-3xl text-center" style={{border:'2px dashed rgba(255,255,255,0.06)'}}>
+                <div className="text-6xl mb-4">📡</div>
+                <p className="text-slate-400 text-lg font-medium">Awaiting Market Signal</p>
+                <p className="text-slate-500 text-sm mt-2">Type a stock symbol in the chat →</p>
+                <div className="flex flex-wrap gap-2 mt-6 justify-center">
+                  {suggestions.map(s=><button key={s} onClick={()=>{setInput(s);}} className="px-3 py-1.5 rounded-lg text-xs font-medium text-sky-400 hover:bg-sky-400/10 transition-colors" style={{border:'1px solid rgba(14,165,233,0.3)'}}>{s}</button>)}
+                </div>
+              </div>
+            ):(
+              <div className="space-y-6">
+                {/* Stock + Sentiment row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Stock Card */}
+                  <div className="glass rounded-2xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Live Quote</span>
+                      <span className="px-2 py-1 rounded-md text-xs font-bold text-sky-400" style={{background:'rgba(14,165,233,0.1)'}}>{data.sym}</span>
+                    </div>
+                    <h3 className="text-white font-semibold mb-3 truncate">{data.name}</h3>
+                    <div className="text-4xl font-black text-white mb-3">{data.price}</div>
+                    <div className={`flex items-center gap-2 text-sm font-bold ${data.up?'text-emerald-400':'text-red-400'}`}>
+                      <span>{data.up?'▲':'▼'}</span><span>{data.change} ({data.pct})</span>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-slate-800 grid grid-cols-2 gap-3">
+                      <div><p className="text-xs text-slate-500">News Count</p><p className="text-white font-bold">{data.sentiment.total}</p></div>
+                      <div><p className="text-xs text-slate-500">Confidence</p><p className="text-white font-bold">{data.sentiment.conf}</p></div>
+                    </div>
+                  </div>
+
+                  {/* Sentiment Card */}
+                  <div className="glass rounded-2xl p-6 flex items-center gap-4">
+                    <PieChart pp={data.sentiment.pp} np={data.sentiment.np} up={data.sentiment.up}/>
+                    <div className="flex-1">
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">AI Verdict</p>
+                      <p className="text-2xl font-black mb-1" style={{color:data.sentiment.overall==='Positive'?'#10b981':data.sentiment.overall==='Negative'?'#ef4444':'#94a3b8'}}>
+                        {data.sentiment.emoji} {data.sentiment.overall}
+                      </p>
+                      <div className="space-y-2 mt-4">
+                        {[['#10b981','Positive',data.sentiment.pp],[`#ef4444`,'Negative',data.sentiment.np],['#64748b','Neutral',data.sentiment.up]].map(([c,l,v])=>(
+                          <div key={l} className="flex items-center gap-2 text-xs">
+                            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{background:c}}/>
+                            <span className="text-slate-400 flex-1">{l}</span>
+                            <span className="font-bold text-white">{v}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* News */}
+                <div>
+                  <h3 className="text-white font-bold mb-4 flex items-center gap-2">📰 <span>Market Intelligence</span></h3>
+                  <div className="space-y-3">
+                    {data.news.map((n,i)=>(
+                      <div key={i} className="glass rounded-xl p-4 flex items-center gap-4 hover:border-sky-500/20 transition-all" style={{border:'1px solid rgba(255,255,255,0.06)'}}>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <span className="text-xs text-slate-400 font-medium">{n.s}</span>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${n.sent==='Positive'?'text-emerald-400 bg-emerald-400/10':n.sent==='Negative'?'text-red-400 bg-red-400/10':'text-slate-400 bg-slate-700'}`}>{n.sent}</span>
+                          </div>
+                          <p className="text-white text-sm font-medium leading-relaxed">{n.t}</p>
+                        </div>
+                        <span className="text-slate-600 text-lg">›</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Chat */}
+        <div className="w-80 lg:w-96 flex flex-col border-l border-slate-800 flex-shrink-0" style={{background:'rgba(15,23,42,0.5)'}}>
+          <div className="p-4 border-b border-slate-800 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{background:'linear-gradient(135deg,rgba(14,165,233,0.2),rgba(139,92,246,0.2))',border:'1px solid rgba(14,165,233,0.2)'}}>🤖</div>
+            <div>
+              <p className="font-bold text-white text-sm">StockSense Core</p>
+              <p className="text-xs text-emerald-400 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"/>Online</p>
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {msgs.map(m=>(
+              <div key={m.id} className={`flex gap-2 ${m.role==='user'?'flex-row-reverse':''}`}>
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm flex-shrink-0 ${m.role==='user'?'bg-slate-700':'bg-slate-800'}`}>{m.role==='user'?user[0].toUpperCase():'🤖'}</div>
+                <div className={`rounded-2xl px-4 py-3 text-sm max-w-[78%] ${m.role==='user'?'bubble-user text-white rounded-tr-sm':'bubble-bot text-slate-200 rounded-tl-sm'}`}
+                  dangerouslySetInnerHTML={{__html:renderText(m.text)}}/>
+              </div>
+            ))}
+            {typing&&(
+              <div className="flex gap-2">
+                <div className="w-7 h-7 rounded-full bg-slate-800 flex items-center justify-center text-sm">🤖</div>
+                <div className="bubble-bot rounded-2xl rounded-tl-sm px-4 py-3 flex gap-1.5 items-center">
+                  <span className="dot"/><span className="dot"/><span className="dot"/>
+                </div>
+              </div>
+            )}
+            <div ref={chatEnd}/>
+          </div>
+
+          <div className="p-4 border-t border-slate-800">
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {suggestions.map(s=><button key={s} onClick={()=>setInput(s)} className="text-xs px-2.5 py-1 rounded-lg text-sky-400 hover:bg-sky-400/10 transition-colors" style={{border:'1px solid rgba(14,165,233,0.25)'}}>{s}</button>)}
+            </div>
+            <form onSubmit={send} className="flex gap-2">
+              <input value={input} onChange={e=>setInput(e.target.value)} placeholder="Search stock..." className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-colors"/>
+              <button type="submit" disabled={!input.trim()||typing} className="neon-btn px-4 py-2.5 rounded-xl text-white font-bold disabled:opacity-40 transition-all">→</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

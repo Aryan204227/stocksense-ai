@@ -1,0 +1,14 @@
+{
+  "name": "stock-sentiment-ai",
+  "version": "1.0.0",
+  "description": "AI-Powered Stock Market Sentiment Analysis Chatbot",
+  "scripts": {
+    "install:all": "cd server && npm install && cd ../client && npm install",
+    "server": "cd server && npm start",
+    "client": "cd client && npm run dev",
+    "dev": "cd server && npm start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

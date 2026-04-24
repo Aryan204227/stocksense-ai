@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: stocksense-ai
+    env: node
+    plan: free
+    buildCommand: cd client && npm install && npm run build && cd ../server && npm install
+    startCommand: node server/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: NEWS_API_KEY
+        value: 820c22559f3945b7a51feca92a1df50d
+      - key: STOCK_API_KEY
+        value: 51ZZBUFL7Q681K8C
