@@ -42,7 +42,21 @@ app.get('/api/status', (req, res) => {
 if (isProd) {
   const dist = path.join(__dirname, '../client/dist');
   app.use(express.static(dist, { maxAge: '1d' }));
-  app.get('*', (req, res) => res.sendFile(path.join(dist, 'index.html')));
+  app.get('*', (req, res) => {
+    const fs = require('fs');
+    const indexPath = path.join(dist, 'index.html');
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.status(404).send(`
+        <div style="font-family:sans-serif; padding: 40px; text-align: center;">
+          <h1 style="color: #e11d48;">UI Not Built Properly</h1>
+          <p>The backend is running, but the React frontend files are missing at <code>${dist}</code>.</p>
+          <p>Please check your Render build commands.</p>
+        </div>
+      `);
+    }
+  });
 } else {
   app.get('/', (req, res) => res.json({ status: 'OK', frontend: 'http://localhost:3000' }));
 }
