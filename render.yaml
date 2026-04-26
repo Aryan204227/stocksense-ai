@@ -14,3 +14,7 @@ services:
         value: 820c22559f3945b7a51feca92a1df50d
       - key: STOCK_API_KEY
         value: 51ZZBUFL7Q681K8C
+      - key: FINNHUB_API_KEY
+        value: d7l666pr01qm7o0aln7gd7l666pr01qm7o0aln80
+      - key: NODE_TLS_REJECT_UNAUTHORIZED
+        value: "0"
