@@ -303,188 +303,171 @@ async function getCompanyProfile(symbol, apiKey) {
 }
 
 async function getStockQuote(query, apiKey) {
-  if (!apiKey || apiKey === 'your_key_here') {
-    const error = new Error('MISSING_KEY');
-    error.publicMessage = 'API Key Missing';
-    throw error;
-  }
+  // ── Strategy: Yahoo (free, no key) → Finnhub → Alpha Vantage → Stooq ──
 
-  if (looksLikeAlphaVantageKey(apiKey)) {
-    try {
-      return await getStockQuoteFromAlpha(query, apiKey);
-    } catch (error) {
-      if (error.message === 'RATE_LIMIT' || error.message === 'AUTH_FAILED') {
-        try {
-          return await getStockQuoteFromYahoo(query);
-        } catch {
-          const rows = await getStockDataFromStooq(query);
-          const latest = rows[rows.length - 1];
-          const prev = rows[rows.length - 2];
-          const price = Number(latest.close);
-          const prevClose = Number(prev.close || latest.open || price);
-          const change = price - prevClose;
-          const changePercent = prevClose ? (change / prevClose) * 100 : 0;
-          return {
-            symbol: String(latest.symbol || query).toUpperCase().replace('.US', ''),
-            name: String(latest.symbol || query).toUpperCase().replace('.US', ''),
-            price: Number(price.toFixed(2)),
-            currency: 'USD',
-            change: Number(change.toFixed(2)),
-            changePercent: Number(changePercent.toFixed(2)),
-            open: Number(Number(latest.open || price).toFixed(2)),
-            high: Number(Number(latest.high || price).toFixed(2)),
-            low: Number(Number(latest.low || price).toFixed(2)),
-            prevClose: Number(prevClose.toFixed(2)),
-            trend: change >= 0 ? 'up' : 'down',
-          };
-        }
-      }
-      throw error;
-    }
-  }
-
-  const symbol = await resolveSymbol(query, apiKey);
-  let quoteRes;
+  // 1️⃣ Try Yahoo Finance first — always free, no rate limits
   try {
-    quoteRes = await axios.get(`${FINNHUB_BASE}/quote`, {
-      params: { symbol, token: apiKey },
-      timeout: 10000,
-    });
-  } catch (error) {
-    const mapped = normalizeApiError(error, 'QUOTE_FAILED');
-    if (mapped.message === 'RATE_LIMIT' || mapped.message === 'AUTH_FAILED') {
-      try {
-        return await getStockQuoteFromYahoo(query);
-      } catch {
-        const rows = await getStockDataFromStooq(query);
-        const latest = rows[rows.length - 1];
-        const prev = rows[rows.length - 2];
-        const price = Number(latest.close);
-        const prevClose = Number(prev.close || latest.open || price);
-        const change = price - prevClose;
-        const changePercent = prevClose ? (change / prevClose) * 100 : 0;
+    const yahooResult = await getStockQuoteFromYahoo(query);
+    if (yahooResult && yahooResult.price > 0) {
+      console.log(`✅ Stock quote from Yahoo Finance: ${query}`);
+      return yahooResult;
+    }
+  } catch (yahooErr) {
+    console.warn(`⚠️  Yahoo quote failed for "${query}": ${yahooErr.message}`);
+  }
+
+  // 2️⃣ Try Finnhub if key present and looks like Finnhub format
+  const finnhubKey = process.env.FINNHUB_API_KEY;
+  if (finnhubKey && !looksLikeAlphaVantageKey(finnhubKey)) {
+    try {
+      const symbol = await resolveSymbol(query, finnhubKey);
+      const quoteRes = await axios.get(`${FINNHUB_BASE}/quote`, {
+        params: { symbol, token: finnhubKey },
+        timeout: 10000,
+      });
+      const quote = quoteRes.data || {};
+      if (quote.c && quote.c > 0) {
+        console.log(`✅ Stock quote from Finnhub: ${symbol}`);
+        let companyName = symbol;
+        try {
+          const profile = await getCompanyProfile(symbol, finnhubKey);
+          companyName = profile?.name || symbol;
+        } catch {}
         return {
-          symbol: String(latest.symbol || query).toUpperCase().replace('.US', ''),
-          name: String(latest.symbol || query).toUpperCase().replace('.US', ''),
-          price: Number(price.toFixed(2)),
+          symbol,
+          name: companyName,
+          price: Number(quote.c.toFixed(2)),
           currency: 'USD',
-          change: Number(change.toFixed(2)),
-          changePercent: Number(changePercent.toFixed(2)),
-          open: Number(Number(latest.open || price).toFixed(2)),
-          high: Number(Number(latest.high || price).toFixed(2)),
-          low: Number(Number(latest.low || price).toFixed(2)),
-          prevClose: Number(prevClose.toFixed(2)),
-          trend: change >= 0 ? 'up' : 'down',
+          change: Number((quote.d || 0).toFixed(2)),
+          changePercent: Number((quote.dp || 0).toFixed(2)),
+          open: Number((quote.o || 0).toFixed(2)),
+          high: Number((quote.h || 0).toFixed(2)),
+          low: Number((quote.l || 0).toFixed(2)),
+          prevClose: Number((quote.pc || 0).toFixed(2)),
+          trend: (quote.d || 0) >= 0 ? 'up' : 'down',
         };
       }
+    } catch (finnhubErr) {
+      console.warn(`⚠️  Finnhub quote failed for "${query}": ${finnhubErr.message}`);
     }
-    throw mapped;
   }
 
-  const quote = quoteRes.data || {};
-  if (!quote.c || quote.c <= 0) {
-    const invalid = new Error('INVALID_QUOTE');
-    invalid.publicMessage = 'Unable to fetch data';
-    throw invalid;
+  // 3️⃣ Try Alpha Vantage if key present
+  if (apiKey && apiKey !== 'your_key_here' && looksLikeAlphaVantageKey(apiKey)) {
+    try {
+      const result = await getStockQuoteFromAlpha(query, apiKey);
+      if (result && result.price > 0) {
+        console.log(`✅ Stock quote from Alpha Vantage: ${query}`);
+        return result;
+      }
+    } catch (alphaErr) {
+      console.warn(`⚠️  Alpha Vantage quote failed for "${query}": ${alphaErr.message}`);
+    }
   }
 
-  const profile = await getCompanyProfile(symbol, apiKey);
-  const companyName = profile?.name || symbol;
+  // 4️⃣ Last resort: Stooq CSV data
+  try {
+    const rows = await getStockDataFromStooq(query);
+    const latest = rows[rows.length - 1];
+    const prev = rows[rows.length - 2];
+    const price = Number(latest.close);
+    const prevClose = Number(prev?.close || latest.open || price);
+    const change = price - prevClose;
+    const changePercent = prevClose ? (change / prevClose) * 100 : 0;
+    console.log(`✅ Stock quote from Stooq: ${query}`);
+    return {
+      symbol: String(latest.symbol || query).toUpperCase().replace('.US', ''),
+      name: String(latest.symbol || query).toUpperCase().replace('.US', ''),
+      price: Number(price.toFixed(2)),
+      currency: 'USD',
+      change: Number(change.toFixed(2)),
+      changePercent: Number(changePercent.toFixed(2)),
+      open: Number(Number(latest.open || price).toFixed(2)),
+      high: Number(Number(latest.high || price).toFixed(2)),
+      low: Number(Number(latest.low || price).toFixed(2)),
+      prevClose: Number(prevClose.toFixed(2)),
+      trend: change >= 0 ? 'up' : 'down',
+    };
+  } catch (stooqErr) {
+    console.warn(`⚠️  Stooq quote failed for "${query}": ${stooqErr.message}`);
+  }
 
-  return {
-    symbol,
-    name: companyName,
-    price: Number(quote.c.toFixed(2)),
-    currency: profile?.currency || 'USD',
-    change: Number((quote.d || 0).toFixed(2)),
-    changePercent: Number((quote.dp || 0).toFixed(2)),
-    open: Number((quote.o || 0).toFixed(2)),
-    high: Number((quote.h || 0).toFixed(2)),
-    low: Number((quote.l || 0).toFixed(2)),
-    prevClose: Number((quote.pc || 0).toFixed(2)),
-    trend: (quote.d || 0) >= 0 ? 'up' : 'down',
-  };
+  const error = new Error('QUOTE_ALL_SOURCES_FAILED');
+  error.publicMessage = 'Unable to fetch data';
+  throw error;
 }
 
 async function getStockHistory(symbol, apiKey) {
-  if (looksLikeAlphaVantageKey(apiKey)) {
-    try {
-      return await getStockHistoryFromAlpha(symbol, apiKey);
-    } catch (error) {
-      if (error.message === 'RATE_LIMIT' || error.message === 'AUTH_FAILED') {
-        try {
-          return await getStockHistoryFromYahoo(symbol);
-        } catch {
-          const rows = await getStockDataFromStooq(symbol);
-          return rows.slice(-30).map((row) => ({
-            date: new Date(row.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-            price: Number(Number(row.close || 0).toFixed(2)),
-            volume: Number(row.volume || 0),
-          })).filter((p) => p.price > 0);
-        }
-      }
-      throw error;
-    }
-  }
+  // ── Strategy: Yahoo (free) → Finnhub → Alpha Vantage → Stooq ──
+  const cleanSymbol = String(symbol || '').toUpperCase();
 
-  if (!apiKey || apiKey === 'your_key_here') {
-    const error = new Error('MISSING_KEY');
-    error.publicMessage = 'API Key Missing';
-    throw error;
-  }
-
-  const to = Math.floor(Date.now() / 1000);
-  const from = to - (30 * 24 * 60 * 60);
-
-  let candleRes;
+  // 1️⃣ Yahoo Finance — always free, no API key needed
   try {
-    candleRes = await axios.get(`${FINNHUB_BASE}/stock/candle`, {
-      params: {
-        symbol,
-        resolution: 'D',
-        from,
-        to,
-        token: apiKey,
-      },
-      timeout: 10000,
-    });
-  } catch (error) {
-    const mapped = normalizeApiError(error, 'HISTORY_FAILED');
-    if (mapped.message === 'RATE_LIMIT' || mapped.message === 'AUTH_FAILED') {
-      try {
-        return await getStockHistoryFromYahoo(symbol);
-      } catch {
-        const rows = await getStockDataFromStooq(symbol);
-        return rows.slice(-30).map((row) => ({
-          date: new Date(row.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-          price: Number(Number(row.close || 0).toFixed(2)),
-          volume: Number(row.volume || 0),
-        })).filter((p) => p.price > 0);
-      }
+    const yahooHistory = await getStockHistoryFromYahoo(cleanSymbol);
+    if (yahooHistory && yahooHistory.length >= 2) {
+      console.log(`✅ Price history from Yahoo Finance: ${cleanSymbol}`);
+      return yahooHistory;
     }
-    throw mapped;
+  } catch (yahooErr) {
+    console.warn(`⚠️  Yahoo history failed for "${cleanSymbol}": ${yahooErr.message}`);
   }
 
-  const payload = candleRes.data || {};
-  if (payload.s !== 'ok' || !Array.isArray(payload.t) || !Array.isArray(payload.c)) {
-    const noData = new Error('HISTORY_UNAVAILABLE');
-    noData.publicMessage = 'Unable to fetch data';
-    throw noData;
+  // 2️⃣ Finnhub candles
+  const finnhubKey = process.env.FINNHUB_API_KEY;
+  if (finnhubKey && !looksLikeAlphaVantageKey(finnhubKey)) {
+    try {
+      const to = Math.floor(Date.now() / 1000);
+      const from = to - (30 * 24 * 60 * 60);
+      const candleRes = await axios.get(`${FINNHUB_BASE}/stock/candle`, {
+        params: { symbol: cleanSymbol, resolution: 'D', from, to, token: finnhubKey },
+        timeout: 10000,
+      });
+      const payload = candleRes.data || {};
+      if (payload.s === 'ok' && Array.isArray(payload.t) && payload.t.length >= 2) {
+        console.log(`✅ Price history from Finnhub: ${cleanSymbol}`);
+        return payload.t.map((ts, idx) => ({
+          date: new Date(ts * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          price: Number((payload.c[idx] || 0).toFixed(2)),
+          volume: payload.v?.[idx] || 0,
+        })).filter(p => p.price > 0);
+      }
+    } catch (finnhubErr) {
+      console.warn(`⚠️  Finnhub history failed for "${cleanSymbol}": ${finnhubErr.message}`);
+    }
   }
 
-  const points = payload.t.map((timestamp, idx) => ({
-    date: new Date(timestamp * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-    price: Number((payload.c[idx] || 0).toFixed(2)),
-    volume: payload.v?.[idx] || 0,
-  })).filter((point) => point.price > 0);
-
-  if (points.length < 2) {
-    const noData = new Error('HISTORY_UNAVAILABLE');
-    noData.publicMessage = 'Unable to fetch data';
-    throw noData;
+  // 3️⃣ Alpha Vantage
+  if (apiKey && apiKey !== 'your_key_here' && looksLikeAlphaVantageKey(apiKey)) {
+    try {
+      const result = await getStockHistoryFromAlpha(cleanSymbol, apiKey);
+      if (result && result.length >= 2) {
+        console.log(`✅ Price history from Alpha Vantage: ${cleanSymbol}`);
+        return result;
+      }
+    } catch (alphaErr) {
+      console.warn(`⚠️  Alpha Vantage history failed for "${cleanSymbol}": ${alphaErr.message}`);
+    }
   }
 
-  return points;
+  // 4️⃣ Stooq CSV — last resort
+  try {
+    const rows = await getStockDataFromStooq(cleanSymbol);
+    const points = rows.slice(-30).map(row => ({
+      date: new Date(row.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      price: Number(Number(row.close || 0).toFixed(2)),
+      volume: Number(row.volume || 0),
+    })).filter(p => p.price > 0);
+    if (points.length >= 2) {
+      console.log(`✅ Price history from Stooq: ${cleanSymbol}`);
+      return points;
+    }
+  } catch (stooqErr) {
+    console.warn(`⚠️  Stooq history failed for "${cleanSymbol}": ${stooqErr.message}`);
+  }
+
+  const error = new Error('HISTORY_ALL_SOURCES_FAILED');
+  error.publicMessage = 'Unable to fetch data';
+  throw error;
 }
 
 module.exports = { getStockQuote, getStockHistory };

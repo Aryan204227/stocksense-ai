@@ -6,6 +6,9 @@ const newsRoutes = require('./routes/newsRoutes');
 
 dotenv.config();
 
+// Fix for "self-signed certificate in certificate chain" error with external APIs like NewsAPI
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 const isProd = process.env.NODE_ENV === 'production';

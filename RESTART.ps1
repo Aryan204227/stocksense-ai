@@ -7,9 +7,9 @@ Write-Host "Stopping processes on port 5000..." -ForegroundColor Yellow
 $port5000 = netstat -ano | Select-String ":5000 " | ForEach-Object {
     ($_ -split '\s+')[-1]
 } | Select-Object -Unique
-foreach ($pid in $port5000) {
-    if ($pid -match '^\d+$' -and $pid -ne '0') {
-        try { Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue } catch {}
+foreach ($procId in $port5000) {
+    if ($procId -match '^\d+$' -and $procId -ne '0') {
+        try { Stop-Process -Id $procId -Force -ErrorAction SilentlyContinue } catch {}
     }
 }
 
