@@ -205,6 +205,9 @@ async function getStockQuoteFromYahoo(queryOrSymbol) {
   const response = await axios.get(YAHOO_QUOTE_BASE, {
     params: { symbols: symbol },
     timeout: 12000,
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    }
   });
   const item = response?.data?.quoteResponse?.result?.[0];
   if (!item?.regularMarketPrice) {
@@ -233,6 +236,9 @@ async function getStockHistoryFromYahoo(symbol) {
   const response = await axios.get(`${YAHOO_CHART_BASE}/${encodeURIComponent(symbol)}`, {
     params: { range: '1mo', interval: '1d' },
     timeout: 12000,
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    }
   });
   const result = response?.data?.chart?.result?.[0];
   const timestamps = result?.timestamp || [];

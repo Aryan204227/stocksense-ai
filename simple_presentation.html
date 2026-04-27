@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockSense AI - Simple Report</title>
+    <!-- Importing a clean, handwritten style font -->
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kalam', cursive, sans-serif;
+            background-color: #fdfbf7; /* Slight paper color */
+            color: #222;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .page {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 50px;
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+            page-break-after: always; /* For PDF printing */
+            border-radius: 4px;
+        }
+        h1 {
+            font-size: 4em;
+            text-align: center;
+            border-bottom: 3px solid #222;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        h2 {
+            font-size: 2.2em;
+            color: #111;
+            border-bottom: 2px dashed #ccc;
+            padding-bottom: 5px;
+            margin-top: 0;
+        }
+        p, li {
+            font-size: 1.3em;
+            margin-bottom: 12px;
+        }
+        ul {
+            list-style-type: circle;
+            padding-left: 30px;
+        }
+        .center {
+            text-align: center;
+        }
+        .box {
+            border: 2px solid #555;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            background: #fafafa;
+        }
+        
+        /* Title Page specific styling */
+        .title-page {
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center;
+            min-height: 800px;
+            text-align: center;
+        }
+
+        /* Print Settings so it looks like a clean PDF */
+        @media print {
+            body { background: white; }
+            .page { 
+                box-shadow: none; 
+                border: none; 
+                margin: 0; 
+                padding: 20px; 
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Page 1: Title -->
+    <div class="page title-page">
+        <p style="font-size: 1.8em; color: #555; margin-bottom: 5px;">College Project</p>
+        <h1 style="border: none; margin-bottom: 10px;">StockSense AI</h1>
+        <p style="font-size: 2.2em; font-weight: bold; color: #333;">Intelligent Market Sentiment Platform</p>
+        
+        <div style="margin-top: 150px; border: 2px dashed #555; padding: 30px; border-radius: 15px;">
+            <img src="https://www.freelogovectors.net/wp-content/uploads/2019/02/lpu-logo-lovely_professional_university.png" alt="LPU Logo" style="height: 60px; margin-bottom: 15px;">
+            <p style="font-size: 1.8em; font-weight: bold; margin: 0;">Presented By: Aryan</p>
+            <p style="font-size: 1.5em; margin: 0;">Lovely Professional University</p>
+        </div>
+    </div>
+
+    <!-- Page 2 -->
+    <div class="page">
+        <h2>1. Introduction</h2>
+        <p><strong>What is the Stock Market?</strong></p>
+        <ul>
+            <li>A global platform where people buy and sell shares of public companies.</li>
+            <li>Prices fluctuate based on company performance, news, and world events.</li>
+        </ul>
+        <div class="box">
+            <p style="margin: 0;"><strong>Example:</strong> If you buy an Apple share for $100, and good news drives the price to $110, you make a profit.</p>
+        </div>
+
+        <h2 style="margin-top: 50px;">2. Problem Statement</h2>
+        <ul>
+            <li><strong>Information Overload:</strong> Thousands of articles are published daily. Humans cannot read them all.</li>
+            <li><strong>Emotional Trading:</strong> Retail investors often panic and sell based on a single bad headline.</li>
+            <li><strong>Fragmented Tools:</strong> Users must use multiple apps to check prices and read news separately.</li>
+        </ul>
+    </div>
+
+    <!-- Page 3 -->
+    <div class="page">
+        <h2>3. Objective</h2>
+        <ul>
+            <li>Build a <strong>single unified platform</strong> for live stock prices and news.</li>
+            <li>Use <strong>Artificial Intelligence</strong> to automatically read news and calculate a Sentiment Score (Positive/Negative).</li>
+            <li>Help users make smart, safe, and data-driven trading decisions instantly.</li>
+        </ul>
+
+        <h2 style="margin-top: 50px;">4. Key Features</h2>
+        <ul>
+            <li><strong>Global Search:</strong> Find any company stock instantly.</li>
+            <li><strong>Real-Time Data:</strong> Live, millisecond accurate prices.</li>
+            <li><strong>Live Charts:</strong> Interactive 30-day historical graphs.</li>
+            <li><strong>AI Sentiment:</strong> Auto-reads news & scores market mood.</li>
+        </ul>
+    </div>
+
+    <!-- Page 4 -->
+    <div class="page">
+        <h2>5. Technologies Used</h2>
+        <ul>
+            <li><strong>Frontend:</strong> React.js, Tailwind CSS, Recharts (Graphs)</li>
+            <li><strong>Backend:</strong> Node.js, Express.js, REST APIs</li>
+            <li><strong>Hosting:</strong> Render Cloud Infrastructure</li>
+        </ul>
+
+        <h2 style="margin-top: 50px;">6. API Integration</h2>
+        <ul>
+            <li><strong>Yahoo & Finnhub APIs:</strong> Used to fetch live stock prices and history charts securely.</li>
+            <li><strong>NewsAPI:</strong> Fetches the top 10 latest news articles about the company.</li>
+            <li><strong>Fallback System:</strong> If one API crashes, the system instantly switches to another so the app never goes down.</li>
+        </ul>
+    </div>
+
+    <!-- Page 5 -->
+    <div class="page">
+        <h2>7. System Architecture</h2>
+        <div class="center box" style="font-size: 1.8em; padding: 30px;">
+            <strong>React UI</strong> &rarr; <strong>Node Backend</strong> &rarr; <strong>Live APIs</strong>
+        </div>
+        <p class="center" style="font-style: italic;">User Searches &rarr; Backend Fetches Data &rarr; AI Processes Text &rarr; UI Renders Charts</p>
+
+        <h2 style="margin-top: 50px;">8. Working (Step-by-Step)</h2>
+        <ol style="font-size: 1.3em; padding-left: 40px; margin-top: 20px;">
+            <li style="margin-bottom: 15px;">User opens the web application.</li>
+            <li style="margin-bottom: 15px;">Types a company name in the search bar (e.g., "Google").</li>
+            <li style="margin-bottom: 15px;">System securely fetches live prices and recent news.</li>
+            <li style="margin-bottom: 15px;">AI Engine scans the news text and generates a Sentiment Score.</li>
+            <li style="margin-bottom: 15px;">Dashboard updates instantly with charts and final verdict.</li>
+        </ol>
+    </div>
+
+    <!-- Page 6 -->
+    <div class="page">
+        <h2>9. Target Audience</h2>
+        <ul>
+            <li><strong>Beginner Investors:</strong> Simplifies complex financial news into an easy-to-understand Positive/Negative score.</li>
+            <li><strong>Finance Students:</strong> A practical tool to study how real-world news impacts stock market sentiment.</li>
+            <li><strong>Casual Traders:</strong> Provides quick, on-the-go insights without needing to read dozens of articles daily.</li>
+        </ul>
+
+        <h2 style="margin-top: 50px;">10. Advantages</h2>
+        <ul>
+            <li><strong>Saves Time:</strong> AI summarizes 50 articles instantly.</li>
+            <li><strong>Easy to Use:</strong> Clean, intuitive design.</li>
+            <li><strong>Better Decisions:</strong> Prevents emotional panic trading.</li>
+            <li><strong>Always Available:</strong> Accessible from laptop or mobile.</li>
+        </ul>
+    </div>
+
+    <!-- Page 7 -->
+    <div class="page">
+        <h2>11. Challenges Overcome</h2>
+        <ul>
+            <li><strong>API Rate Limiting:</strong> Free financial APIs crashed when queried too often. We built a robust fallback mechanism to switch providers dynamically.</li>
+            <li><strong>Production Deployment:</strong> Resolved complex CORS errors and backend routing issues to make the full-stack site live on Render.</li>
+            <li><strong>Async Data Sync:</strong> Ensuring the AI sentiment analysis perfectly syncs with live price charts without lagging the user interface.</li>
+        </ul>
+
+        <h2 style="margin-top: 50px;">12. Limitations</h2>
+        <ul>
+            <li><strong>Limited Data Availability:</strong> The system currently operates on limited present data and recent news, lacking decades of extensive historical data.</li>
+            <li><strong>Future Unpredictability:</strong> While AI analyzes current sentiment well, it cannot perfectly predict future market behavior or sudden unprecedented events.</li>
+            <li><strong>Scope of Analysis:</strong> Currently focuses on immediate news impact, lacking deeper fundamental financial analysis (like balance sheets).</li>
+        </ul>
+    </div>
+
+    <!-- Page 8 -->
+    <div class="page">
+        <h2>13. Future Scope</h2>
+        <ul>
+            <li><strong>User Accounts:</strong> Allow users to login and save custom Watchlists.</li>
+            <li><strong>Price Alerts:</strong> Send Email/SMS when a stock crashes.</li>
+            <li><strong>ChatGPT Integration:</strong> AI generates a detailed human summary of stock drops.</li>
+            <li><strong>Data Expansion:</strong> Integrate premium data sources for deep historical trend analysis.</li>
+            <li><strong>Mobile App:</strong> Convert the web platform into an Android and iOS application.</li>
+        </ul>
+
+        <h2 style="margin-top: 50px;">14. Conclusion</h2>
+        <div class="box">
+            <p style="margin-bottom: 15px;">StockSense AI bridges the gap between complex financial data and human understanding.</p>
+            <p style="margin-bottom: 15px;">By combining live stock prices with AI news sentiment, we provide a fast, easy, and data-driven tool for modern investors.</p>
+            <p style="margin: 0; font-size: 1.1em;"><strong>Live Project Link:</strong> <a href="https://stocksense-ai-r24w.onrender.com/" style="color: #2563eb; text-decoration: underline;">https://stocksense-ai-r24w.onrender.com/</a></p>
+        </div>
+        <h3 class="center" style="font-size: 3em; margin-top: 50px;">Thank You!</h3>
+    </div>
+
+</body>
+</html>

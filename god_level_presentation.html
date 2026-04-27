@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockSense AI - God Level Presentation</title>
+    
+    <!-- Reveal.js for Animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    
+    <!-- Tailwind CSS for Modern Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Inter - Apple/Vercel Style) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Ultra Premium Vercel/Apple Style */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000; /* Pitch Black */
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        /* Ambient Glowing Orbs */
+        .glow-orb-1 {
+            position: absolute;
+            top: -20%; left: -10%;
+            width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+        }
+        .glow-orb-2 {
+            position: absolute;
+            bottom: -20%; right: -10%;
+            width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+        }
+
+        /* Reveal Overrides */
+        .reveal .slides {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .reveal .slides section {
+            text-align: left;
+            padding: 4rem 8rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Typography */
+        .text-gradient {
+            background: linear-gradient(135deg, #e0e7ff 0%, #38bdf8 50%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .reveal h1 { font-size: 5.5rem; font-weight: 900; letter-spacing: -0.05em; line-height: 1.1; margin-bottom: 1rem; text-transform: none; font-family: 'Inter', sans-serif;}
+        .reveal h2 { font-size: 3.5rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 2rem; text-transform: none; font-family: 'Inter', sans-serif; color: #f8fafc;}
+        .reveal p { font-size: 1.5rem; color: #94a3b8; line-height: 1.6; font-family: 'Inter', sans-serif; }
+        
+        .list-item {
+            font-size: 1.8rem;
+            color: #cbd5e1;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .list-item i {
+            margin-top: 0.4rem;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #38bdf8, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Glass Cards */
+        .premium-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 2.5rem;
+            backdrop-filter: blur(20px);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .premium-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        /* Macbook Frame for Live App */
+        .macbook-frame {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 12px 12px 0 0;
+            background: #1e293b;
+            padding-top: 25px; /* Top bar height */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            border: 1px solid #334155;
+        }
+        .macbook-frame::before { /* Camera dots */
+            content: "•••";
+            position: absolute;
+            top: 2px; left: 15px;
+            color: #64748b;
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+        .macbook-frame iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-top: 1px solid #0f172a;
+            background: #000;
+        }
+        .macbook-bottom {
+            height: 15px;
+            background: #334155;
+            border-radius: 0 0 16px 16px;
+            width: 104%;
+            margin-left: -2%;
+            position: relative;
+        }
+        .macbook-notch {
+            position: absolute;
+            top: 0; left: 50%; transform: translateX(-50%);
+            width: 80px; height: 5px;
+            background: #0f172a;
+            border-radius: 0 0 5px 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-orb-1"></div>
+    <div class="glow-orb-2"></div>
+    
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- 1. Title Slide (God Level) -->
+            <section data-transition="fade">
+                <div class="flex items-center justify-between h-full w-full">
+                    <div class="w-1/2 pr-10">
+                        <div class="text-sm font-bold tracking-[0.3em] text-sky-400 uppercase mb-4 fragment fade-up">College Project Viva</div>
+                        <h1 class="fragment fade-up" data-fragment-index="1">StockSense <span class="text-gradient">AI</span></h1>
+                        <p class="text-3xl text-slate-400 font-light mb-12 fragment fade-up" data-fragment-index="2">Intelligent Market Sentiment Platform</p>
+                        
+                        <div class="fragment fade-up" data-fragment-index="3" style="border-left: 2px solid #38bdf8; padding-left: 1.5rem;">
+                            <p class="text-xl text-white font-semibold mb-1">Presented by Aryan</p>
+                            <p class="text-lg text-slate-500">Lovely Professional University</p>
+                        </div>
+                    </div>
+                    
+                    <div class="w-1/2 fragment zoom-in" data-fragment-index="4">
+                        <!-- HIGH QUALITY DASHBOARD IMAGE -->
+                        <div class="macbook-frame">
+                            <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=2070&auto=format&fit=crop" style="width: 100%; height: 500px; object-fit: cover; border-top: 1px solid #0f172a;" alt="Dashboard Preview">
+                        </div>
+                        <div class="macbook-bottom"><div class="macbook-notch"></div></div>
+                        <p class="text-center text-sm text-slate-500 mt-4"><i class="fa-solid fa-circle text-emerald-500 mr-2"></i>StockSense Dashboard</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    "Good morning respected teachers. My name is Aryan, a student at Lovely Professional University. Today, I am proud to present my project: StockSense AI. It is an intelligent market sentiment platform. On the right, you can actually see the live working version of my project."
+                </aside>
+            </section>
+
+            <!-- 2. Introduction -->
+            <section data-transition="slide">
+                <h2>The <span class="text-gradient">Stock Market</span></h2>
+                <div class="grid grid-cols-2 gap-12 mt-10">
+                    <div>
+                        <div class="list-item fragment fade-up"><i class="fa-solid fa-chart-line"></i> A global platform for buying & selling company shares.</div>
+                        <div class="list-item fragment fade-up"><i class="fa-solid fa-arrow-trend-up"></i> Prices fluctuate based on performance, news, and world events.</div>
+                    </div>
+                    <div class="premium-card fragment fade-left">
+                        <h3 class="text-2xl text-white mb-2"><i class="fa-brands fa-apple text-slate-400 mr-2"></i> Real-Life Example</h3>
+                        <p class="text-lg text-slate-400">If positive news breaks about Apple launching a new iPhone, investors rush to buy. The demand increases, and the stock price goes up. Our system is built to track this exact news-to-price relationship.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    "To start, what is the stock market? It's simply where shares are traded. Prices go up and down mostly because of news. For example, if Apple announces a great product, its price shoots up. My project tracks this data."
+                </aside>
+            </section>
+
+            <!-- 3. Problem Statement -->
+            <section data-transition="slide">
+                <h2>The <span class="text-red-400">Problem</span></h2>
+                <div class="grid grid-cols-3 gap-8 mt-12">
+                    <div class="premium-card fragment fade-up border-t-4 border-t-red-500/50">
+                        <i class="fa-solid fa-newspaper text-4xl text-red-400 mb-6"></i>
+                        <h3 class="text-2xl text-white mb-4">Information Overload</h3>
+                        <p class="text-base text-slate-400">Thousands of financial articles drop daily. Humans physically cannot process all this data.</p>
+                    </div>
+                    <div class="premium-card fragment fade-up" data-fragment-index="1" style="border-top: 4px solid rgba(248, 113, 113, 0.5);">
+                        <i class="fa-solid fa-bolt text-4xl text-red-400 mb-6"></i>
+                        <h3 class="text-2xl text-white mb-4">Emotional Trading</h3>
+                        <p class="text-base text-slate-400">Retail investors panic-sell or FOMO-buy based on a single headline.</p>
+                    </div>
+                    <div class="premium-card fragment fade-up" data-fragment-index="2" style="border-top: 4px solid rgba(248, 113, 113, 0.5);">
+                        <i class="fa-solid fa-cubes text-4xl text-red-400 mb-6"></i>
+                        <h3 class="text-2xl text-white mb-4">Fragmented Tools</h3>
+                        <p class="text-base text-slate-400">Users juggle 5 different apps just to see charts and read related news.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    "The main problem we face is Information Overload. There is too much news. Second, people trade on emotions and panic. Third, users have to open multiple apps to see charts and news separately."
+                </aside>
+            </section>
+
+            <!-- 4. Objective -->
+            <section data-transition="slide">
+                <h2>Project <span class="text-gradient">Objective</span></h2>
+                <div class="mt-12 space-y-6">
+                    <div class="premium-card fragment fade-left flex items-center gap-6 p-6">
+                        <div class="bg-blue-500/20 p-4 rounded-full"><i class="fa-solid fa-object-group text-2xl text-blue-400"></i></div>
+                        <p class="text-xl text-slate-200 m-0">Build a <b>single unified platform</b> for live stock prices and news.</p>
+                    </div>
+                    <div class="premium-card fragment fade-left flex items-center gap-6 p-6">
+                        <div class="bg-purple-500/20 p-4 rounded-full"><i class="fa-solid fa-brain text-2xl text-purple-400"></i></div>
+                        <p class="text-xl text-slate-200 m-0">Use <b>Artificial Intelligence</b> to scan articles and declare a Positive/Negative score.</p>
+                    </div>
+                    <div class="premium-card fragment fade-left flex items-center gap-6 p-6">
+                        <div class="bg-emerald-500/20 p-4 rounded-full"><i class="fa-solid fa-shield-halved text-2xl text-emerald-400"></i></div>
+                        <p class="text-xl text-slate-200 m-0">Help users make <b>safe, data-driven decisions</b> without emotional bias.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    "Our objective is to build ONE single platform. We want to use AI to automatically read the news and give it a Good or Bad score. This will help normal people make safe trading decisions."
+                </aside>
+            </section>
+
+            <!-- 5. Features -->
+            <section data-transition="zoom">
+                <h2>Key <span class="text-gradient">Features</span></h2>
+                <div class="grid grid-cols-2 gap-8 mt-10">
+                    <div class="list-item fragment fade-up"><i class="fa-solid fa-search"></i> <div><b class="text-white">Global Search:</b> Instantly find any stock.</div></div>
+                    <div class="list-item fragment fade-up"><i class="fa-solid fa-bolt"></i> <div><b class="text-white">Real-Time Data:</b> Live, millisecond-accurate prices.</div></div>
+                    <div class="list-item fragment fade-up"><i class="fa-solid fa-chart-area"></i> <div><b class="text-white">Interactive Charts:</b> Visual 30-day market trends.</div></div>
+                    <div class="list-item fragment fade-up"><i class="fa-solid fa-robot"></i> <div><b class="text-white">AI Sentiment:</b> Auto-calculates market mood.</div></div>
+                    <div class="list-item fragment fade-up"><i class="fa-solid fa-toggle-on"></i> <div><b class="text-white">Live vs Demo:</b> Toggle to practice without real risk.</div></div>
+                </div>
+                <aside class="notes">
+                    "The features of my project are: A search bar for any stock. Real-time live pricing. 30-day interactive history charts. AI sentiment calculation. And a toggle switch between Demo practice mode and Live mode."
+                </aside>
+            </section>
+
+            <!-- 6. Tech Stack -->
+            <section data-transition="slide">
+                <h2>Tech <span class="text-gradient">Stack</span></h2>
+                <div class="grid grid-cols-2 gap-12 mt-12">
+                    <div class="premium-card fragment fade-up">
+                        <h3 class="text-2xl text-sky-400 mb-6 border-b border-slate-700 pb-4"><i class="fa-brands fa-react mr-3"></i>Frontend</h3>
+                        <div class="flex flex-col gap-4">
+                            <span class="text-xl text-slate-300"><b>React.js</b> (UI Library)</span>
+                            <span class="text-xl text-slate-300"><b>Tailwind CSS</b> (Glassmorphism styling)</span>
+                            <span class="text-xl text-slate-300"><b>Recharts</b> (Financial graphs)</span>
+                        </div>
+                    </div>
+                    <div class="premium-card fragment fade-up" data-fragment-index="1">
+                        <h3 class="text-2xl text-green-400 mb-6 border-b border-slate-700 pb-4"><i class="fa-brands fa-node-js mr-3"></i>Backend</h3>
+                        <div class="flex flex-col gap-4">
+                            <span class="text-xl text-slate-300"><b>Node.js & Express</b> (Server logic)</span>
+                            <span class="text-xl text-slate-300"><b>REST APIs</b> (Data transfer)</span>
+                            <span class="text-xl text-slate-300"><b>Render</b> (Cloud hosting)</span>
+                        </div>
+                    </div>
+                </div>
+                <aside class="notes">
+                    "For the user interface, I used React.js and Tailwind CSS to make it look beautiful and modern. For the backend server, I used Node.js and Express to securely handle all the data."
+                </aside>
+            </section>
+
+            <!-- 7. API Integration -->
+            <section data-transition="slide">
+                <h2>API <span class="text-gradient">Integration</span></h2>
+                <p class="mb-10 text-xl text-slate-400">We don't create data; we fetch it from trusted global sources.</p>
+                
+                <div class="space-y-6">
+                    <div class="premium-card fragment fade-left p-6 flex items-center gap-6 border-l-4 border-l-purple-500">
+                        <i class="fa-solid fa-arrow-trend-up text-3xl text-purple-400 w-12"></i>
+                        <div>
+                            <h4 class="text-xl text-white font-bold">Yahoo Finance & Finnhub</h4>
+                            <p class="text-slate-400 text-sm mt-1">Fetches the live stock prices and history charts.</p>
+                        </div>
+                    </div>
+                    <div class="premium-card fragment fade-left p-6 flex items-center gap-6 border-l-4 border-l-blue-500">
+                        <i class="fa-solid fa-newspaper text-3xl text-blue-400 w-12"></i>
+                        <div>
+                            <h4 class="text-xl text-white font-bold">NewsAPI</h4>
+                            <p class="text-slate-400 text-sm mt-1">Fetches the top latest news articles about the company.</p>
+                        </div>
+                    </div>
+                    <div class="premium-card fragment fade-left p-6 flex items-center gap-6 border-l-4 border-l-emerald-500">
+                        <i class="fa-solid fa-shield text-3xl text-emerald-400 w-12"></i>
+                        <div>
+                            <h4 class="text-xl text-white font-bold">Smart Fallback System</h4>
+                            <p class="text-slate-400 text-sm mt-1">If one API server crashes, the system instantly switches to another to prevent errors.</p>
+                        </div>
+                    </div>
+                </div>
+                <aside class="notes">
+                    "Since we don't own stock data, we use APIs. Yahoo Finance and Finnhub provide the prices. NewsAPI provides the articles. And we built a fallback system so if one API fails, the website still runs."
+                </aside>
+            </section>
+
+            <!-- 8. Architecture -->
+            <section data-transition="zoom">
+                <h2 class="text-center">System <span class="text-gradient">Architecture</span></h2>
+                <div class="flex items-center justify-center gap-4 mt-16 w-full px-10">
+                    
+                    <div class="text-center fragment fade-in">
+                        <div class="w-24 h-24 rounded-full bg-blue-500/20 border border-blue-400 flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(59,130,246,0.3)]">
+                            <i class="fa-brands fa-react text-4xl text-blue-400"></i>
+                        </div>
+                        <p class="text-sm font-bold text-white">React UI</p>
+                        <p class="text-xs text-slate-500">User Search</p>
+                    </div>
+
+                    <div class="w-16 h-1 bg-slate-700 relative fragment fade-in"><div class="absolute right-0 -top-1.5 border-t-4 border-b-4 border-l-8 border-transparent border-l-slate-700"></div></div>
+
+                    <div class="text-center fragment fade-in">
+                        <div class="w-24 h-24 rounded-full bg-green-500/20 border border-green-400 flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(34,197,94,0.3)]">
+                            <i class="fa-brands fa-node-js text-4xl text-green-400"></i>
+                        </div>
+                        <p class="text-sm font-bold text-white">Node.js</p>
+                        <p class="text-xs text-slate-500">Process Data</p>
+                    </div>
+
+                    <div class="w-16 h-1 bg-slate-700 relative fragment fade-in"><div class="absolute right-0 -top-1.5 border-t-4 border-b-4 border-l-8 border-transparent border-l-slate-700"></div></div>
+
+                    <div class="text-center fragment fade-in">
+                        <div class="w-24 h-24 rounded-full bg-purple-500/20 border border-purple-400 flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(168,85,247,0.3)]">
+                            <i class="fa-solid fa-server text-4xl text-purple-400"></i>
+                        </div>
+                        <p class="text-sm font-bold text-white">External APIs</p>
+                        <p class="text-xs text-slate-500">Yahoo / News</p>
+                    </div>
+
+                </div>
+                <div class="text-center mt-16 fragment fade-up">
+                    <p class="text-xl text-slate-400 bg-slate-800/50 inline-block px-6 py-3 rounded-full border border-slate-700">
+                        <i class="fa-solid fa-rotate mr-2 text-cyan-400 animate-spin"></i> Data is processed by AI and returned as JSON to the UI.
+                    </p>
+                </div>
+                <aside class="notes">
+                    "The architecture is straightforward. The user searches on the React UI. The request goes to the Node.js server. Node fetches data from external APIs, calculates the AI score, and sends the final result back to the user."
+                </aside>
+            </section>
+
+            <!-- 9. Working Step by Step -->
+            <section data-transition="slide">
+                <h2><span class="text-gradient">Working</span> (Step-by-Step)</h2>
+                <div class="premium-card mt-10">
+                    <div class="space-y-6 text-xl">
+                        <div class="fragment fade-up flex gap-4"><span class="text-cyan-400 font-black">1.</span> <span class="text-slate-200">User opens the web application.</span></div>
+                        <div class="fragment fade-up flex gap-4"><span class="text-cyan-400 font-black">2.</span> <span class="text-slate-200">Types a company name in the search bar (e.g. "Google").</span></div>
+                        <div class="fragment fade-up flex gap-4"><span class="text-cyan-400 font-black">3.</span> <span class="text-slate-200">System securely fetches live prices and recent news in the background.</span></div>
+                        <div class="fragment fade-up flex gap-4"><span class="text-cyan-400 font-black">4.</span> <span class="text-slate-200">The AI Engine scans the article text and calculates a sentiment score.</span></div>
+                        <div class="fragment fade-up flex gap-4"><span class="text-cyan-400 font-black">5.</span> <span class="text-slate-200">Dashboard updates instantly with charts and the final verdict.</span></div>
+                    </div>
+                </div>
+                <aside class="notes">
+                    "Step by step: The user opens the app, searches 'Google'. The backend quietly fetches prices and news. The AI reads the news, generates a score, and the dashboard updates instantly."
+                </aside>
+            </section>
+
+            <!-- 10. Advantages -->
+            <section data-transition="convex">
+                <h2><span class="text-emerald-400">Advantages</span></h2>
+                <div class="grid grid-cols-2 gap-6 mt-12">
+                    <div class="premium-card fragment zoom-in flex flex-col items-center text-center p-8">
+                        <i class="fa-solid fa-clock text-4xl text-emerald-400 mb-4"></i>
+                        <h4 class="text-2xl text-white font-bold mb-2">Saves Time</h4>
+                        <p class="text-sm text-slate-400">No need to read 50 articles. AI summarizes it instantly.</p>
+                    </div>
+                    <div class="premium-card fragment zoom-in flex flex-col items-center text-center p-8">
+                        <i class="fa-solid fa-wand-magic-sparkles text-4xl text-emerald-400 mb-4"></i>
+                        <h4 class="text-2xl text-white font-bold mb-2">Easy to Use</h4>
+                        <p class="text-sm text-slate-400">Clean, premium dark-mode UI with no clutter.</p>
+                    </div>
+                    <div class="premium-card fragment zoom-in flex flex-col items-center text-center p-8">
+                        <i class="fa-solid fa-brain text-4xl text-emerald-400 mb-4"></i>
+                        <h4 class="text-2xl text-white font-bold mb-2">Better Decisions</h4>
+                        <p class="text-sm text-slate-400">Prevents emotional panic trading with pure data.</p>
+                    </div>
+                    <div class="premium-card fragment zoom-in flex flex-col items-center text-center p-8">
+                        <i class="fa-solid fa-globe text-4xl text-emerald-400 mb-4"></i>
+                        <h4 class="text-2xl text-white font-bold mb-2">Always Available</h4>
+                        <p class="text-sm text-slate-400">Web-based platform accessible from any laptop or mobile.</p>
+                    </div>
+                </div>
+                <aside class="notes">
+                    "The biggest advantage is saving time. The AI does the reading for you. It's extremely easy to use, helps investors make better decisions, and can be accessed anywhere."
+                </aside>
+            </section>
+
+            <!-- 11. Future Scope -->
+            <section data-transition="slide">
+                <h2>Future <span class="text-gradient">Scope</span></h2>
+                <div class="mt-12 space-y-6">
+                    <div class="list-item fragment fade-up"><i class="fa-solid fa-users text-cyan-400"></i> <span class="text-white"><b>User Accounts:</b> Allow users to login and save custom Watchlists.</span></div>
+                    <div class="list-item fragment fade-up"><i class="fa-solid fa-comment-dots text-purple-400"></i> <span class="text-white"><b>ChatGPT Integration:</b> AI generates a 2-line human summary of the stock's status.</span></div>
+                    <div class="list-item fragment fade-up"><i class="fa-solid fa-mobile-screen text-pink-400"></i> <span class="text-white"><b>Mobile App:</b> Convert the web platform into an Android/iOS application.</span></div>
+                    <div class="list-item fragment fade-up"><i class="fa-solid fa-bell text-yellow-400"></i> <span class="text-white"><b>Price Alerts:</b> Send email/SMS when a stock crashes.</span></div>
+                </div>
+                <aside class="notes">
+                    "In the future, we plan to add user login functionality. We also want to integrate ChatGPT for better summaries, launch a mobile app, and send price alerts to users' phones."
+                </aside>
+            </section>
+
+            <!-- 12. Conclusion -->
+            <section data-transition="zoom">
+                <div class="flex flex-col items-center justify-center text-center h-full">
+                    <i class="fa-solid fa-check-circle text-7xl text-emerald-400 mb-8 fragment zoom-in"></i>
+                    <h2 class="text-6xl font-black mb-8 fragment fade-up">Conclusion</h2>
+                    <p class="text-2xl text-slate-300 font-light max-w-4xl mx-auto mb-16 fragment fade-up">
+                        StockSense AI bridges the gap between complex financial data and human understanding. It is a powerful tool that makes market research <b class="text-white">fast, easy, and data-driven</b>.
+                    </p>
+                    <h1 class="text-8xl font-black text-gradient fragment zoom-in">Thank You!</h1>
+                    <p class="text-xl text-slate-500 mt-6 fragment fade-in">Any Questions?</p>
+                </div>
+                <aside class="notes">
+                    "To conclude, StockSense AI makes complex stock market data simple to understand. It is powerful, fast, and easy. Thank you so much for your time. I am open to any questions."
+                </aside>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/notes/notes.min.js"></script>
+    
+    <script>
+        Reveal.initialize({
+            hash: true,
+            controls: true,
+            progress: true,
+            center: false,
+            transition: 'fade', 
+            backgroundTransition: 'fade',
+            plugins: [ RevealNotes ],
+            margin: 0.1,
+            width: 1200,
+            height: 700
+        });
+    </script>
+</body>
+</html>

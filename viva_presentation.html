@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockSense AI - Premium Presentation</title>
+    
+    <!-- Reveal.js for Animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    
+    <!-- Tailwind CSS for Modern Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Base Theme */
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #020617; /* Slate 950 */
+            color: #f8fafc;
+            overflow: hidden;
+        }
+
+        /* Particle Background */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+        }
+
+        /* Reveal Override */
+        .reveal .slides {
+            width: 90% !important;
+            height: 90% !important;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            padding: 3rem;
+            height: 100%;
+        }
+
+        /* Glowing Gradients */
+        .text-gradient {
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 5s linear infinite;
+        }
+
+        .text-cyan { color: #06b6d4; }
+        .text-violet { color: #8b5cf6; }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* Neon Borders */
+        .neon-border {
+            position: relative;
+        }
+        .neon-border::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            border-radius: 26px;
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+            z-index: -1;
+            opacity: 0.5;
+            filter: blur(10px);
+            transition: opacity 0.3s ease;
+        }
+        .neon-border:hover::before {
+            opacity: 1;
+            filter: blur(15px);
+        }
+
+        /* Typography */
+        .reveal h1, .reveal h2, .reveal h3 {
+            font-family: 'Outfit', sans-serif;
+            text-transform: none;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Lists */
+        ul.custom-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+        ul.custom-list li {
+            position: relative;
+            padding-left: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            color: #cbd5e1;
+            font-weight: 400;
+        }
+        ul.custom-list li::before {
+            content: "\f00c"; /* FontAwesome check */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 0.2rem;
+            color: #06b6d4;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Interactive Background -->
+    <div id="particles-js"></div>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- 1. Title Slide -->
+            <section data-transition="zoom">
+                <div class="glass-card neon-border mx-auto max-w-5xl flex flex-col items-center justify-center min-h-[70vh]">
+                    <div class="text-7xl mb-6 animate-bounce">📈</div>
+                    <h1 class="text-6xl md:text-8xl font-black mb-4 tracking-tight">
+                        StockSense <span class="text-gradient">AI</span>
+                    </h1>
+                    <p class="text-2xl text-slate-300 font-light tracking-widest uppercase mb-12">
+                        Intelligent Market Sentiment Platform
+                    </p>
+                    
+                    <div class="flex gap-4 mt-8">
+                        <span class="px-6 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-semibold text-lg fragment fade-up">Real-Time Data</span>
+                        <span class="px-6 py-2 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-400 font-semibold text-lg fragment fade-up" data-fragment-index="1">AI Analysis</span>
+                    </div>
+
+                    <div class="mt-16 text-slate-400 text-lg">
+                        <p>A College Viva Presentation</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. The Problem -->
+            <section data-transition="slide">
+                <div class="max-w-6xl mx-auto pt-10">
+                    <h2 class="text-5xl font-bold mb-12 text-left">The <span class="text-rose-500">Problem</span></h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Problem 1 -->
+                        <div class="glass-card fragment fade-up hover:-translate-y-2 transition-transform duration-300">
+                            <i class="fa-solid fa-newspaper text-5xl text-rose-400 mb-6"></i>
+                            <h3 class="text-2xl font-bold mb-4">Information Overload</h3>
+                            <p class="text-slate-300 text-lg">Thousands of financial articles are published daily. It's impossible for a human to read and analyze them all quickly.</p>
+                        </div>
+                        
+                        <!-- Problem 2 -->
+                        <div class="glass-card fragment fade-up hover:-translate-y-2 transition-transform duration-300" data-fragment-index="1">
+                            <i class="fa-solid fa-brain text-5xl text-rose-400 mb-6"></i>
+                            <h3 class="text-2xl font-bold mb-4">Emotional Trading</h3>
+                            <p class="text-slate-300 text-lg">Retail investors often make rushed decisions in panic based on a single bad headline, ignoring the big picture.</p>
+                        </div>
+
+                        <!-- Problem 3 -->
+                        <div class="glass-card fragment fade-up hover:-translate-y-2 transition-transform duration-300" data-fragment-index="2">
+                            <i class="fa-solid fa-puzzle-piece text-5xl text-rose-400 mb-6"></i>
+                            <h3 class="text-2xl font-bold mb-4">Fragmented Data</h3>
+                            <p class="text-slate-300 text-lg">Users have to check 5 different websites to see stock charts, read news, and understand market trends.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. The Solution -->
+            <section data-transition="convex">
+                <div class="glass-card neon-border max-w-5xl mx-auto pt-16 pb-16">
+                    <h2 class="text-6xl font-black mb-8">The <span class="text-gradient">Solution</span></h2>
+                    <p class="text-3xl text-slate-200 mb-12 font-light leading-relaxed">
+                        An AI-powered aggregator that automates market research.
+                    </p>
+                    
+                    <div class="text-left max-w-3xl mx-auto">
+                        <ul class="custom-list">
+                            <li class="fragment fade-right"><b class="text-cyan">Fetches</b> live news from top financial sources automatically.</li>
+                            <li class="fragment fade-right"><b class="text-violet">Analyzes</b> the sentiment using AI (Positive, Negative, or Neutral).</li>
+                            <li class="fragment fade-right"><b class="text-pink-500">Correlates</b> the news sentiment directly with live stock market prices.</li>
+                            <li class="fragment fade-right"><b class="text-emerald-400">Visualizes</b> everything on one single, stunning, easy-to-use dashboard.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Key Features Grid -->
+            <section data-transition="slide">
+                <div class="max-w-6xl mx-auto pt-10">
+                    <h2 class="text-5xl font-bold mb-10 text-left">Key <span class="text-gradient">Features</span></h2>
+                    
+                    <div class="grid grid-cols-2 gap-6 text-left">
+                        
+                        <div class="glass-card fragment fade-right flex items-start gap-6 border-l-4 border-l-emerald-500 p-8">
+                            <div class="bg-emerald-500/20 p-4 rounded-xl text-emerald-400 text-3xl"><i class="fa-solid fa-robot"></i></div>
+                            <div>
+                                <h3 class="text-2xl font-bold mb-2 text-emerald-400">AI Sentiment Engine</h3>
+                                <p class="text-slate-300 text-lg">Scans articles and calculates confidence scores (0-100%) to declare market mood.</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card fragment fade-left flex items-start gap-6 border-l-4 border-l-cyan-500 p-8">
+                            <div class="bg-cyan-500/20 p-4 rounded-xl text-cyan-400 text-3xl"><i class="fa-solid fa-chart-line"></i></div>
+                            <div>
+                                <h3 class="text-2xl font-bold mb-2 text-cyan-400">Live Price Tracking</h3>
+                                <p class="text-slate-300 text-lg">Real-time quotes and interactive 30-day historical trend charts.</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card fragment fade-right flex items-start gap-6 border-l-4 border-l-violet-500 p-8">
+                            <div class="bg-violet-500/20 p-4 rounded-xl text-violet-400 text-3xl"><i class="fa-solid fa-shield-halved"></i></div>
+                            <div>
+                                <h3 class="text-2xl font-bold mb-2 text-violet-400">Smart API Fallbacks</h3>
+                                <p class="text-slate-300 text-lg">Automatic failover mechanism (Yahoo → Finnhub) ensures 99% uptime.</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card fragment fade-left flex items-start gap-6 border-l-4 border-l-amber-500 p-8">
+                            <div class="bg-amber-500/20 p-4 rounded-xl text-amber-400 text-3xl"><i class="fa-solid fa-toggle-on"></i></div>
+                            <div>
+                                <h3 class="text-2xl font-bold mb-2 text-amber-400">Live vs Demo Mode</h3>
+                                <p class="text-slate-300 text-lg">Instantly toggle between real production data and safe simulation mode.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Technology Stack -->
+            <section data-transition="zoom">
+                <div class="glass-card max-w-5xl mx-auto pt-12 pb-12">
+                    <h2 class="text-5xl font-bold mb-12">Technology <span class="text-gradient">Stack</span></h2>
+                    
+                    <div class="grid grid-cols-2 gap-12">
+                        <!-- Frontend -->
+                        <div class="text-left">
+                            <h3 class="text-3xl font-bold text-cyan-400 border-b border-cyan-400/30 pb-4 mb-6"><i class="fa-brands fa-react mr-3"></i>Frontend</h3>
+                            <ul class="custom-list !text-xl">
+                                <li><b>React.js & Vite:</b> Ultra-fast UI rendering</li>
+                                <li><b>Tailwind CSS:</b> Custom Glassmorphism design</li>
+                                <li><b>Recharts:</b> Dynamic financial graphing</li>
+                                <li><b>Framer Motion:</b> Fluid component animations</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Backend -->
+                        <div class="text-left">
+                            <h3 class="text-3xl font-bold text-violet-400 border-b border-violet-400/30 pb-4 mb-6"><i class="fa-brands fa-node-js mr-3"></i>Backend</h3>
+                            <ul class="custom-list !text-xl">
+                                <li><b>Node.js & Express:</b> Fast API routing</li>
+                                <li><b>Axios:</b> Secure external data fetching</li>
+                                <li><b>NewsAPI & Finnhub:</b> Live market data sources</li>
+                                <li><b>Render:</b> Cloud production deployment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. System Flow -->
+            <section data-transition="slide">
+                <div class="max-w-6xl mx-auto pt-8">
+                    <h2 class="text-5xl font-bold mb-12 text-left">How It <span class="text-emerald-400">Works</span></h2>
+                    
+                    <div class="relative">
+                        <!-- Connecting Line -->
+                        <div class="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-500 via-violet-500 to-emerald-500 opacity-30 rounded-full"></div>
+                        
+                        <div class="flex flex-col gap-6 text-left pl-20">
+                            
+                            <div class="relative fragment fade-left">
+                                <div class="absolute -left-16 top-1 w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center font-bold text-black shadow-[0_0_15px_#06b6d4]">1</div>
+                                <h3 class="text-2xl font-bold text-white mb-1">User Searches</h3>
+                                <p class="text-slate-400 text-xl">User types "Tesla" on the React interface.</p>
+                            </div>
+                            
+                            <div class="relative fragment fade-left text-left">
+                                <div class="absolute -left-16 top-1 w-8 h-8 rounded-full bg-violet-500 flex items-center justify-center font-bold text-black shadow-[0_0_15px_#8b5cf6]">2</div>
+                                <h3 class="text-2xl font-bold text-white mb-1">Backend Fetches Data</h3>
+                                <p class="text-slate-400 text-xl">Node.js server contacts Yahoo Finance & NewsAPI simultaneously.</p>
+                            </div>
+
+                            <div class="relative fragment fade-left text-left">
+                                <div class="absolute -left-16 top-1 w-8 h-8 rounded-full bg-pink-500 flex items-center justify-center font-bold text-black shadow-[0_0_15px_#ec4899]">3</div>
+                                <h3 class="text-2xl font-bold text-white mb-1">AI Processing</h3>
+                                <p class="text-slate-400 text-xl">NLP algorithms scan the news text to generate a Sentiment Score.</p>
+                            </div>
+
+                            <div class="relative fragment fade-left text-left">
+                                <div class="absolute -left-16 top-1 w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center font-bold text-black shadow-[0_0_15px_#10b981]">4</div>
+                                <h3 class="text-2xl font-bold text-white mb-1">Dashboard Render</h3>
+                                <p class="text-slate-400 text-xl">Combined data is sent back to React, triggering chart animations.</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. Conclusion -->
+            <section data-transition="zoom">
+                <div class="glass-card neon-border max-w-4xl mx-auto flex flex-col items-center justify-center min-h-[60vh]">
+                    <div class="text-7xl mb-6 text-emerald-400"><i class="fa-solid fa-rocket"></i></div>
+                    <h2 class="text-5xl font-black mb-8">Conclusion</h2>
+                    <p class="text-2xl text-slate-300 font-light leading-relaxed mb-12 text-center">
+                        StockSense AI successfully bridges the gap between raw financial data and human understanding, providing a powerful, fast, and automated tool for modern retail investors.
+                    </p>
+                    <h1 class="text-6xl font-black text-gradient">Thank You!</h1>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <script>
+        // Initialize Reveal.js
+        Reveal.initialize({
+            hash: true,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide', 
+            backgroundTransition: 'fade',
+        });
+
+        // Initialize Particles.js Background
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": ["#06b6d4", "#8b5cf6"] },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5, "random": false },
+                "size": { "value": 3, "random": true },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#8b5cf6",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 2,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": { "enable": true, "mode": "grab" },
+                    "onclick": { "enable": true, "mode": "push" },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
+                    "push": { "particles_nb": 4 }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+</html>

@@ -21,11 +21,11 @@ if (isProd) {
   const distAlt = path.join(__dirname, '..', 'client', 'dist');
 
   const serveDir = fs.existsSync(path.join(dist, 'index.html')) ? dist
-                 : fs.existsSync(path.join(distAlt, 'index.html')) ? distAlt
-                 : dist;
+    : fs.existsSync(path.join(distAlt, 'index.html')) ? distAlt
+      : dist;
 
   console.log(`📁 Serving static from: ${serveDir}`);
-  try { console.log(`📂 Contents: ${fs.readdirSync(serveDir).join(', ')}`); } catch(e) { console.error(`❌ ${e.message}`); }
+  try { console.log(`📂 Contents: ${fs.readdirSync(serveDir).join(', ')}`); } catch (e) { console.error(`❌ ${e.message}`); }
 
   // Serve all static assets (JS, CSS, images) with no CORS restriction
   app.use(express.static(serveDir, { maxAge: '1d' }));
@@ -74,7 +74,7 @@ app.get('/api/status', (req, res) => {
     status: 'OK',
     service: 'StockSense AI',
     version: '3.0.0',
-    newsApi:  process.env.NEWS_API_KEY  ? 'configured' : 'missing',
+    newsApi: process.env.NEWS_API_KEY ? 'configured' : 'missing',
     stockApi: (process.env.FINNHUB_API_KEY || process.env.STOCK_API_KEY) ? 'configured' : 'missing',
     timestamp: new Date().toISOString(),
   });
@@ -91,8 +91,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, error: err.message });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n🚀 StockSense AI running on port ${PORT}`);
   console.log(`🔑 News API:  ${process.env.NEWS_API_KEY ? '✅' : '❌ Missing'}`);
   console.log(`📈 Stock API: ${(process.env.FINNHUB_API_KEY || process.env.STOCK_API_KEY) ? '✅' : '❌ Missing'}\n`);
 });
+
+// Fix for Render 502 Bad Gateway timeouts
+server.keepAliveTimeout = 120000;
+server.headersTimeout = 120000;
